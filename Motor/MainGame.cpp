@@ -1,6 +1,8 @@
 #include "MainGame.h"
 #include <iostream>
 #include "Error.h"
+#include <ctime>
+#include <cstdlib>
 using namespace std;
 
 MainGame::MainGame(int spriteNum) {
@@ -8,7 +10,7 @@ MainGame::MainGame(int spriteNum) {
 	width = 800;
 	height = 600;
 	gameState = GameState::PLAY;
-	time = 0;
+	ingame_time = 0;
 }
 
 MainGame::~MainGame() {
@@ -51,35 +53,46 @@ void MainGame::init() {
 }
 
 void MainGame::draw() {
+	ingame_time += 0.02;
+	if (sprites.size() == 0) return;
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	program.use();
 	glActiveTexture(GL_TEXTURE0);
 	GLuint timeLocation = program.getUniformLocation("time");
-	glUniform1f(timeLocation, time);
-	time += 0.02;
+	glUniform1f(timeLocation, ingame_time);
 	GLuint imageLocation = program.getUniformLocation("myImage");
 	glUniform1i(imageLocation, 0);
-	for (int i = 0; i < max_sprites; i++)
+	for (int i = 0; i < sprites.size(); i++)
 		sprites[i]->draw();
 	program.unuse();
 	window.swapWindow();
 }
 
 void MainGame::run() {
+	srand(unsigned int(time(NULL)));
 	init();
-	sprites = new Sprite * [max_sprites];
-	for (int i = 0; i < max_sprites; i++)
-		sprites[i] = new Sprite();
-
-	sprites[0]->init(-1, -1, 1, 1, "Textures/imagen.png");
-	sprites[1]->init(0, 0, 1, 1, "Textures/imagen.png");
 	update();
+}
+
+void MainGame::spriteGeneration() 
+{
+	if (sprites.size() == max_sprites || ingame_time - last_time < 5.0) return;
+
+	float x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2.8 - 1.9;
+	float y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2.8 - 1.9;
+
+	Sprite* sprite = new Sprite();
+	sprite->init(x, y, 1, 1, "Textures/imagen.png");
+	sprites.push_back(sprite);
+	last_time = ingame_time;
+
 }
 
 void MainGame::update() {
 	while (gameState != GameState::EXIT) {
 		draw();
+		spriteGeneration();
 		processInput();
 	}
 }

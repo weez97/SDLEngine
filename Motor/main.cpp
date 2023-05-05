@@ -2,7 +2,7 @@
 #include "MainGame.h"
 
 int main(int argc,char** argv) {
-	MainGame mainGame(2);
+	MainGame mainGame(15);
 	mainGame.run();
 	system("PAUSE");
 	return 0;
