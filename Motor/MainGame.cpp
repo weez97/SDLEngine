@@ -3,7 +3,8 @@
 #include "Error.h"
 using namespace std;
 
-MainGame::MainGame() {
+MainGame::MainGame(int spriteNum) {
+	max_sprites = spriteNum;
 	width = 800;
 	height = 600;
 	gameState = GameState::PLAY;
@@ -50,7 +51,6 @@ void MainGame::init() {
 }
 
 void MainGame::draw() {
-	cout << time;
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	program.use();
@@ -60,14 +60,20 @@ void MainGame::draw() {
 	time += 0.02;
 	GLuint imageLocation = program.getUniformLocation("myImage");
 	glUniform1i(imageLocation, 0);
-	sprite.draw();
+	for (int i = 0; i < max_sprites; i++)
+		sprites[i]->draw();
 	program.unuse();
 	window.swapWindow();
 }
 
 void MainGame::run() {
 	init();
-	sprite.init(-1, -1, 1, 1,"Textures/imagen.png");
+	sprites = new Sprite * [max_sprites];
+	for (int i = 0; i < max_sprites; i++)
+		sprites[i] = new Sprite();
+
+	sprites[0]->init(-1, -1, 1, 1, "Textures/imagen.png");
+	sprites[1]->init(0, 0, 1, 1, "Textures/imagen.png");
 	update();
 }
 

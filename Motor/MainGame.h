@@ -12,18 +12,19 @@ enum class GameState {
 class MainGame
 {
 private:
+	int max_sprites;
 	int width;
 	int height;
 	float time;
 	Window window;
 	HLSLProgram program;
-	Sprite sprite;
+	Sprite** sprites;
 	void init();
 	void processInput();
 	void initShaders();
 
 public:
-	MainGame();
+	MainGame(int spriteNum);
 	~MainGame();
 	GameState gameState;
 	
