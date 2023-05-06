@@ -50,7 +50,6 @@ void MainGame::init() {
 }
 
 void MainGame::draw() {
-	cout << time;
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	program.use();
