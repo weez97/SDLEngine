@@ -4,7 +4,13 @@
 #include "Sprite.h"
 #include "HLSLProgram.h"
 #include "Window.h"
-#include <vector>
+#include "Camera2D.h"
+#include "InputManager.h"
+#include "Level.h"
+#include "Player.h"
+#include "Human.h"
+#include "Zombie.h"
+#include "SpriteBatch.h"
 
 enum class GameState {
 	PLAY,EXIT
@@ -13,21 +19,27 @@ enum class GameState {
 class MainGame
 {
 private:
-	float last_time;
-	int max_sprites;
 	int width;
 	int height;
-	float ingame_time;
+	SpriteBatch spriteBatch;
+	vector<Level*> levels;
+	vector<Human*> humans;
+	vector<Zombie*> zombies;
+	Player* player;
+	int currentLevel;
 	Window window;
 	HLSLProgram program;
-	std::vector<Sprite*> sprites;
+	Sprite sprite;
+	Camera2D camera2D;
+	InputManager inputManager;
 	void init();
+	void initLevel();
 	void processInput();
 	void initShaders();
-	void spriteGeneration();
-
+	void handleInput();
+	void updateElements();
 public:
-	MainGame(int spriteNum);
+	MainGame();
 	~MainGame();
 	GameState gameState;
 	
